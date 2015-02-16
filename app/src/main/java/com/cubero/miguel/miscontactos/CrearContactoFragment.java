@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cubero.miguel.miscontactos.utils.ContactReceiver;
 import com.cubero.miguel.miscontactos.utils.Contacto;
 import com.cubero.miguel.miscontactos.utils.TextChangedListener;
 
@@ -99,8 +100,16 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
     }
 
     private void agregarContactos(String nombre, String telefono, String email, String direccion, String imageUri) {
-        Contacto nuevo = new Contacto(nombre,telefono,email,direccion,imageUri);
-        //TODO: Corregir adapter.add(nuevo);
+        Contacto nuevo_contacto = new Contacto(nombre,telefono,email,direccion,imageUri);
+
+        // Aqui Mandamos llamar al BroadCastReceiver. Vamos a lanzar por el BroadCastRecevier este Intent y lo cogera quien esté escuchando.
+        Intent intent = new Intent("listacontactos");
+        intent.putExtra("operacion", ContactReceiver.CONTACTO_AGREGADO);
+        intent.putExtra("datos",nuevo_contacto);
+        // Obtenemos la Actividad asociada a este fragmento y enviamos el intent que acabamos que crear (Lo va a recoger el fragmento Lista de Contactos).
+        // Este intent es enviado por Boradcast a todos los fragments que esten escuchando.
+        getActivity().sendBroadcast(intent);
+
 
     }
 
