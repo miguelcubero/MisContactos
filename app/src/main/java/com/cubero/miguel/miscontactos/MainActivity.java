@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
 
     }
 
+    // Inicializar Componentes
     private void inicializarComponentesUI() {
         txtNombre = (EditText) findViewById(R.id.cmpNombre);
         txtTelefono = (EditText) findViewById(R.id.cmpTelefono);
