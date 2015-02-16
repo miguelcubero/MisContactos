@@ -1,6 +1,7 @@
 package com.cubero.miguel.miscontactos.utils;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -48,6 +49,6 @@ public class ContacListAdapter extends ArrayAdapter<Contacto>{
         textView.setText(actual.getTelefono());
 
         ImageView ivContactImage = (ImageView) view.findViewById(R.id.ivContactImage);
-        ivContactImage.setImageURI(actual.getImageUri());
+        ivContactImage.setImageURI(Uri .parse(actual.getImageUri()));
     }
 }

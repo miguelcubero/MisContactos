@@ -1,17 +1,17 @@
 package com.cubero.miguel.miscontactos.utils;
 
-import android.net.Uri;
+import java.io.Serializable;
 
 /**
  * Created by Miguel on 15/2/15.
  */
-public class Contacto {
+public class Contacto implements Serializable {
 
     private String nombre, direccion, telefono, email;
     // Ruta a la imagen que el usuario ha seleccionado.
-    private Uri imageUri;
+    private String imageUri; // No es posible serializar objetos URI, por eso lo ponemos tipos String.
 
-    public Contacto(String nombre, String telefono, String email, String direccion, Uri imageUri) {
+    public Contacto(String nombre, String telefono, String email, String direccion, String imageUri) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
@@ -23,7 +23,7 @@ public class Contacto {
     //<editor-fold desc="GETTER METHODS">
 
 
-    public Uri getImageUri() {
+    public String getImageUri() {
         return imageUri;
     }
 
@@ -47,7 +47,7 @@ public class Contacto {
     //<editor-fold desc="SETTER METHODS">
 
 
-    public void setImageUri(Uri imageUri) {
+    public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
 
@@ -69,4 +69,29 @@ public class Contacto {
     //</editor-fold>
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Contacto contacto = (Contacto) o;
+
+        if (!direccion.equals(contacto.direccion)) return false;
+        if (!email.equals(contacto.email)) return false;
+        if (!imageUri.equals(contacto.imageUri)) return false;
+        if (!nombre.equals(contacto.nombre)) return false;
+        if (!telefono.equals(contacto.telefono)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = nombre.hashCode();
+        result = 31 * result + direccion.hashCode();
+        result = 31 * result + telefono.hashCode();
+        result = 31 * result + email.hashCode();
+        result = 31 * result + imageUri.hashCode();
+        return result;
+    }
 }
