@@ -48,19 +48,17 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         txtDireccion = (EditText) view.findViewById(R.id.cmpDireccion);
         txtEmail = (EditText) view.findViewById(R.id.cmpEmail);
         imgViewContacto = (ImageView) view.findViewById(R.id.imgViewContacto);
-
-
+        imgViewContacto.setOnClickListener(this);
         txtNombre.addTextChangedListener(new TextChangedListener(){
             @Override
             // Cada vez que se escriba, borre o lo que sea en el textview se va a ver reflejado en este evento
             public void onTextChanged(CharSequence seq, int start, int before, int count) {
-                btnAgregar = (Button) view.findViewById(R.id.btnAgregar);
-                // seq es la secuencia de caracteres del Edittext. Si no está vacía, le decimos que se habilite el boton.
-                btnAgregar.setEnabled(!seq.toString().trim().isEmpty());
-
-
+         // seq es la secuencia de caracteres del Edittext. Si no está vacía, le decimos que se habilite el boton.
+               btnAgregar.setEnabled(!seq.toString().trim().isEmpty());
             }
         });
+        btnAgregar = (Button)view.findViewById(R.id.btnAgregar);
+        btnAgregar.setOnClickListener(this);
     }
 
 

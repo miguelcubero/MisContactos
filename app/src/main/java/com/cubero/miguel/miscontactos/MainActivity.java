@@ -1,85 +1,88 @@
 package com.cubero.miguel.miscontactos;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TabHost;
+import android.support.v4.view.ViewPager;
+import com.cubero.miguel.miscontactos.utils.TabsPagerAdapter;
 
-import com.cubero.miguel.miscontactos.utils.ContacListAdapter;
-import com.cubero.miguel.miscontactos.utils.Contacto;
-import com.cubero.miguel.miscontactos.utils.TextChangedListener;
+// IMplementamos la interfaz para que escuche cuando se pulse en las pestañas
+public class MainActivity extends Activity implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
-import java.util.ArrayList;
+    // Control de Fichas Tabs
+    private ViewPager viewPager;
+    // Va a ser una clase que va a administrar los componentes que vamos a tener dentro de nuestras pestañas
+    private TabsPagerAdapter adapter;
+    // Objeto de referencia a nuestro objeto ActionBar
+    private android.support.v7.app.ActionBar actionBar;
+    // Títulos de las pestañas que va a tener nuestro ActionBar
+    private String[] titulos = {"Crear Contacto","Lista Contactos"};
 
 
-public class MainActivity extends Activity {
-
-    private EditText txtNombre,txtTelefono,txtDireccion,txtEmail;
-    private ArrayAdapter<Contacto> adapter;
-    private ImageView imgViewContacto;
-    private ListView contactsListView;
-    private Button btnAgregar;
-    // Le ponemos el valor de 1. Lo suyo es tener un request_code diferente para cada una de las distintas notificaciones que tengamos en nuestra app
-    private int request_code = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        inicializarComponentesUI();
-        inicializarListaContactos();
         inicializarTabs();
 
     }
 
-    private void inicializarListaContactos() {
-        adapter = new ContacListAdapter(this, new ArrayList<Contacto>());
-        contactsListView.setAdapter(adapter);
-
-    }
 
 
     private void inicializarTabs() {
-        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
-        tabHost.setup();
+        // Sacamos el elemento raiz de nuestro nuevo xml limpito.
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        // Continuamos con las pestañas.
+        //actionBar = getActionBar();
+        actionBar = getSupportActionBar();
 
-        TabHost.TabSpec spec = tabHost.newTabSpec("tab1");
-        spec.setContent(R.id.tab1);
-        spec.setIndicator("Crear");
-        tabHost.addTab(spec);
+        // El FragmentManager va a ser el administrador de los fragmentos que tenga nuestra actividad
+        adapter = new TabsPagerAdapter(getFragmentManager());
+        viewPager.setAdapter(adapter);
+        // Le decimos que la primera pestaña o tab no va a estar enabled por defecto
+        actionBar.setHomeButtonEnabled(false);
+        // Y que el modo de navegacion es por pestañas.
+        //actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        spec = tabHost.newTabSpec("tab2");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator("Lista");
-        tabHost.addTab(spec);
+        // Agregamos los títulos de cada una de las pestañas
+
+        for(String nombre:titulos){
+            android.support.v7.app.ActionBar.Tab tab = actionBar.newTab().setText(nombre);
+            tab.setTabListener(this);
+            actionBar.addTab(tab);
+        }
+
+
+        // Le decimos al ViewPager que su auditor va a ser la página principal.
+        viewPager.setOnPageChangeListener(this);
+    }
+
+    //<editor-fold desc="METODOS VIEW CHANGE LISTENER">
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
-    // Inicializar Componentes
-    private void inicializarComponentesUI() {
-        txtNombre = (EditText) findViewById(R.id.cmpNombre);
-        txtTelefono = (EditText) findViewById(R.id.cmpTelefono);
-        txtDireccion = (EditText) findViewById(R.id.cmpDireccion);
-        txtEmail = (EditText) findViewById(R.id.cmpEmail);
-        contactsListView = (ListView) findViewById(R.id.listView);
-        imgViewContacto = (ImageView) findViewById(R.id.imgViewContacto);
-
-
-        txtNombre.addTextChangedListener(new TextChangedListener(){
-            @Override
-            // Cada vez que se escriba, borre o lo que sea en el textview se va a ver reflejado en este evento
-            public void onTextChanged(CharSequence seq, int start, int before, int count) {
-                btnAgregar = (Button) findViewById(R.id.btnAgregar);
-                // seq es la secuencia de caracteres del Edittext. Si no está vacía, le decimos que se habilite el boton.
-                btnAgregar.setEnabled(!seq.toString().trim().isEmpty());
-
-
-            }
-        });
+    @Override
+    public void onPageSelected(int position) {
+        actionBar.setSelectedNavigationItem(position);
     }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="METODO TABS CHANGE LISTENER">
+    @Override
+    public void onTabSelected(android.support.v7.app.ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    //</editor-fold>
 
 }
